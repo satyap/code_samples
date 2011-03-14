@@ -2,23 +2,14 @@
 # been touched since "older_than" days. You have to grant the special user permission with this SQL:
 # GRANT  DELETE ON `database_name`.`sessions` TO 'username'@'%localhost';
 # GRANT SELECT ON *.* TO 'username'@'%localhost';
-dbpass='KNUhn76jhvbg8'
-dbuser='railsuser'
+dbpass=''
+dbuser='username'
 host='localhost'
 older_than=2 # delete sessions older than this many days
 databases=[
-'acu',
-'asu',
-'demo',
-'dev',
-'montevallo',
-'muohio',
-'nmsu',
-'radford',
-'sau',
-'test',
-'uga',
-'unc',
+    'list',
+    'of',
+    'databases'
 ]
 
 
