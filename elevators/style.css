@@ -1,0 +1,25 @@
+#bank {
+    position: relative;
+}
+
+.elevator {
+    border: 1px solid blue;
+    position: absolute;
+    text-align: center;
+}
+
+.floor {
+    border-bottom: 10px solid #000;
+    position: absolute;
+    left: 0;
+}
+
+.button {
+    background-color: red;
+    position: absolute;
+    left: 15;
+}
+
+.pushed {
+    background-color: green;
+}
