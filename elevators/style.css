@@ -16,8 +16,15 @@
 
 .button {
     background-color: red;
-    position: absolute;
-    left: 15;
+    margin-left: 15px;
+    width: 5px;
+    height: 5px;
+}
+.up {
+    margin-top: 17px;
+}
+.down {
+    margin-top: 5px;
 }
 
 .pushed {

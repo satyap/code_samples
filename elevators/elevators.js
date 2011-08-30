@@ -6,7 +6,8 @@
         width: 40,
         height: 40,
         padding: 20,
-        button_space: 30
+        button_space: 30,
+        floors_called: {}
     };
 
 
@@ -64,41 +65,40 @@
             $('#bank').css({
                 'width': bank.width * bank.elevators.length * bank.padding,
                 'height': bank.floors * bank.height,
-                'background_color': '#f00',
             });
             this.draw_floors();
-            this.draw_buttons();
+            
         },
         draw_floors: function() {
             var $bank = $('#bank');
             for(var i=0;i <= bank.floors; i++) {
                 var $floor = $('<div class="floor"/>');
+                $floor.addClass('floor' + i);
                 $floor.css({
                     width: $bank.css('width'),
                     height: bank.height,
                     top: i * bank.height,
                 });
+                this.draw_buttons(i, $floor);
                 $bank.append($floor);
             }
         },
-        draw_buttons: function() {
-            var $bank = $('#bank');
-            for(var i=0;i <= bank.floors; i++) {
-                var $up = $('<div class="up button"/>');
-                var $down = $('<div class="down button"/>');
-                $up.css({
-                    width: 5,
-                    height: 5,
-                    top: i * bank.height + 15,
-                });
-                $down.css({
-                    width: 5,
-                    height: 5,
-                    top: i * bank.height + 25,
-                });
-                $bank.append($up);
-                $bank.append($down);
-            }
+        draw_buttons: function(floor, $floor) {
+            $floor.append( this.make_button(floor, 'up'));
+            $floor.append( this.make_button(floor, 'down'));
+        },
+        make_button: function(floor, direction) {
+            var $btn = $('<div class="button"/>');
+            $btn.addClass(direction);
+            var self=this;
+            $btn.bind('click', function() { self.call_floor(floor, direction); });
+            return $btn;
+        },
+        call_floor: function(floor, direction) {
+            console.log("call:", floor, direction);
+            $('.floor' + floor + ' .' + direction).addClass('pushed');
+            bank.floors_called[direction + floor] = 1;
+            console.log(bank.floors_called);
         }
     });
 
