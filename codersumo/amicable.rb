@@ -2,6 +2,8 @@
 # seconds on my old dual-core AMD 2.x GHz. I don't remember the RAM speed but
 # it's a 2007-vintage machine. It outputs the correct number: 80106, as I put a
 # "puts 80106" in codersumo and that was taken as correct!
+# Aha! hit upon an optimization -- or rather a de-brute-forcification
+# -- that causes it to run in 0.7 seconds.
 class Fixnum
     def amicable?(other_num)
         self != other_num && d == other_num && self == other_num.d
@@ -22,13 +24,10 @@ end
 if $0==__FILE__
     sum=[]
     (1..15000).each do |j|
-        (j-1..15000).each do |i|
-            next unless i.amicable? j
-            sum << i
-            sum << j
-        end
+        # the inner loop is unnecessary, we just need to check if d(j) is amicable with j.
+        next unless j.d.amicable? j
+        sum << j
     end
-    sum.uniq!
     puts sum.inject(0){|k,i|k+i}
 end
 __END__
