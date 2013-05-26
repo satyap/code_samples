@@ -4,6 +4,7 @@
 # "puts 80106" in codersumo and that was taken as correct!
 # Aha! hit upon an optimization -- or rather a de-brute-forcification
 # -- that causes it to run in 0.7 seconds.
+require './divisors'
 class Fixnum
     def amicable?(other_num)
         self != other_num && d == other_num && self == other_num.d
@@ -11,13 +12,6 @@ class Fixnum
     def d
         return @d if @d
         @d = divisors.inject(0) {|memo, k| memo + k}
-    end
-    def divisors
-        return [] if self <= 1
-        [1] + (2..Math.sqrt(self).to_i+1).map do |i|
-            next if self%i!=0 || i==self
-            [i, self/i]
-        end.flatten.compact.uniq
     end
 end
 
