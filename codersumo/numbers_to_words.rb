@@ -1,5 +1,6 @@
 class Fixnum
     def to_word
+        return "zero" if self.zero?
         n2w = [nil] + %w[one two three four five six seven eight nine]
         tens2w = [nil] + %w[ten twenty thirty forty fifty sixty seventy eighty ninety]
         teens2w = %w[ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen]
@@ -25,6 +26,7 @@ class Fixnum
         end
         if self >= 100
             digits[2..-1].each_with_index do |n, i|
+                next if n=='0'
                 words += [ pos[i+2], n.to_i.to_word ]
             end
         end

@@ -2,6 +2,7 @@ require './numbers_to_words'
 
 describe "Fixnum#to_word" do
     it "should spell out the word in numbers" do
+        0.to_word.should == "zero"
         1.to_word.should == "one"
         10.to_word.should == "ten"
         11.to_word.should == "eleven"
@@ -27,5 +28,6 @@ describe "Fixnum#to_word" do
         104.to_word.should == "one-hundred-four"
         114.to_word.should == "one-hundred-fourteen"
         1354.to_word.should == "one-thousand-three-hundred-fifty-four"
+        1099.to_word.should == "one-thousand-ninety-nine"
     end
 end
