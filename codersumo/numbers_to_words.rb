@@ -36,9 +36,9 @@ class Fixnum
 end
 
 if $0 == __FILE__
-    while(x=gets.to_i)
-        puts x
-        puts x.to_word 
+    while(x=gets)
+        break unless /\A\d+\n\z/===x
+        puts x.to_i.to_word 
     end
 end
 
