@@ -20,6 +20,13 @@ sub fixRatio($$) {
     }
 }
 
+my @images = @ARGV;
+my $border = 0;
+# some day, this will be using GetOpt
+if($images[0] =~/^\d+$/) {
+    $border = shift(@images);
+}
+
 foreach my $img (@ARGV) {
     my $new=$img;
     $new=~s/o_//;
@@ -29,7 +36,7 @@ foreach my $img (@ARGV) {
 
     my $new_w;
     my $new_h;
-    ($new_w, $new_h) = fixRatio($w, $h);
+    ($new_w, $new_h) = fixRatio($w + $border, $h + $border);
 
     my $xoffset = ($new_w - $w) / 2;
     my $yoffset = ($new_h - $h) / 2;
