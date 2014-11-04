@@ -5,7 +5,6 @@ describe PrimeTable do
     class PrimeTable
       attr_accessor :primes
       public :is_prime?
-      public :calc_primes
     end
   end
 
@@ -37,15 +36,14 @@ describe PrimeTable do
 
   describe '#primes' do
     it 'should return a list of N primes' do
-      n=5
+      n = 5
       p = PrimeTable.new(n)
-      p.calc_primes
       expect( p.primes ).to eql([ 2, 3, 5, 7, 11 ])
     end
+
     describe 'when not given how many primes' do
       it 'should return 10 primes' do
         p = PrimeTable.new
-        p.calc_primes
         expect( p.primes ).to eql([ 2, 3, 5, 7, 11, 13, 17, 19, 23, 29 ])
       end
     end
