@@ -1,7 +1,8 @@
 class PrimeTable
-  def initialize
+  def initialize(n=10)
+    @n = n
     @primes = []
-    primes
+    calc_primes
   end
 
   def get_table
@@ -14,10 +15,10 @@ class PrimeTable
     @primes.include?(i) || @primes.all? {|p| i<p || i % p != 0}
   end
 
-  def primes
+  def calc_primes
     i = 2
-    while primes.length < @n do
-      @primes << is_prime?(i)
+    while @primes.length < @n do
+      @primes << i if is_prime?(i)
       i += 1
     end
   end
