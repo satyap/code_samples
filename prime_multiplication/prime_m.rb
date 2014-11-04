@@ -11,13 +11,13 @@ class PrimeTable
   private
   def is_prime?(i)
     # assumption: all primes < i are in the @primes array
-
+    @primes.include?(i) || @primes.all? {|p| i<p || i % p != 0}
   end
 
   def primes
     i = 2
     while primes.length < @n do
-      @primes << is_prime? i
+      @primes << is_prime?(i)
       i += 1
     end
   end
