@@ -21,3 +21,11 @@ Notes
 
 • Do not use the Prime class from stdlib (write your own code).
 
+
+Implementation thoughts
+-----------------------
+
+I have implemented this by calculating the whole 2d array and then printing it
+out. We can trade memory for speed by calculating each row and then printing
+it. Memory is (relatively) cheap. If we expect to be calculating *really* large
+arrays, we could switch the implementation.

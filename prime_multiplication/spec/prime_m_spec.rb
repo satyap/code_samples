@@ -51,12 +51,13 @@ describe PrimeTable do
 
   describe '#get_table' do
     it 'should return a list of multiplication table rows' do
-      p = PrimeTable.new(3)
+      p = PrimeTable.new(4)
       expect( p.get_table ).to eql [
-        [ nil, 2, 3, 5],
-        [ 2,   4, 6,10],
-        [ 3,   6, 9,15],
-        [ 5,  10,15,25],
+        [ nil, 2, 3, 5, 7],
+        [ 2,   4, 6,10,14],
+        [ 3,   6, 9,15,21],
+        [ 5,  10,15,25,35],
+        [ 7,  14,21,35,49],
       ]
     end
   end
