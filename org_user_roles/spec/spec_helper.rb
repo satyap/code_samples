@@ -3,6 +3,7 @@ require 'database_cleaner'
 require 'active_record'
 require_relative '../user'
 require_relative '../organization'
+require_relative '../role'
 
 RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
@@ -33,3 +34,4 @@ ActiveRecord::Base.establish_connection(
   :database => 'example.db'
 )
 
+ActiveRecord::Base.logger = Logger.new(STDOUT) if ENV['DEBUG']
