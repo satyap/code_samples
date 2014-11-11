@@ -16,9 +16,14 @@ describe Organization do
 
   before do
     user1.create_role('admin', org_1)
-    user2.create_role('admin', root)
     user1.create_role('user', org_2)
+    user1.create_role('user', org_3)
     user1.create_role('denied', child_org_2)
+
+    user2.create_role('admin', root)
+    user2.create_role('denied', org_3)
+    user2.create_role('admin', child_org_3)
+    user2.create_role('user', child_org_3)
   end
 
   describe 'root organization' do
@@ -35,9 +40,28 @@ describe Organization do
     end
   end
 
-  describe 'child prganizations' do
-    it 'should inherit parent roles'
+  describe 'child organizations' do
+    it 'should inherit parent roles' do
+      expect( child_org_1.admin? user1 ).to be true
+      expect( child_org_3.user? user1 ).to be true
+      expect( child_org_1.user? user1 ).to be false
+    end
 
-    it 'should inherit root org roles'
+    it 'should inherit root org roles' do
+      expect( child_org_1.admin? user2 ).to be true
+    end
+
+    context 'when parent has permission but current org is denied' do
+      it 'should deny access' do
+        expect( child_org_2.user? user1 ).to be false
+      end
+    end
+
+    context 'when parent org is denied but current org has permission' do
+      it 'should deny access' do
+        expect( child_org_3.user? user2 ).to be false
+        expect( child_org_3.admin? user2 ).to be false
+      end
+    end
   end
 end

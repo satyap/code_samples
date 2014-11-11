@@ -5,11 +5,11 @@ class Organization < ActiveRecord::Base
   has_many :users, through: :roles
 
   def admin?(user)
-    has_role?('admin', user)
+    has_role?('admin', user) && !denied?(user)
   end
 
   def user?(user)
-    has_role?('user', user)
+    has_role?('user', user) && !denied?(user)
   end
 
   def denied?(user)
