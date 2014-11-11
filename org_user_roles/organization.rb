@@ -18,14 +18,8 @@ class Organization < ActiveRecord::Base
 
   private
   def has_role?(role_name, user)
-    # If denied, stop right here and don't check further
-    if has_role_with_me?('denied', user)
-      return role_name=='denied' ? true : false
-      # If 'denied' role is being checked, return true here.
-      # If 'denied' role is not being checked, return false here.
-      # Could just return the result of the comparison, but that would be more
-      # confusing than returning the explicit values.
-    end
+    # Not checking for denied role explicitly. If that isn't a common case,
+    # it'll lead to more SQL queries.
     mine = has_role_with_me?(role_name, user)
     return mine || !!(parent && parent.send("#{role_name}?", user))
   end
