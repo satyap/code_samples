@@ -28,3 +28,23 @@ If a role is specified to a child org for a given user, that role takes preceden
 When I have the "denied" role for Child Org 2, than I only have admin access to Org 1 and Child Org 1 and I don't even see Child Org 2. 
 
 Please consider writing code for the logic described above using tests to verify your logic. Simulate the data access code and try to keep the number of queries to a minimum. 
+
+
+Testing
+-------
+
+Run rake:
+
+    rake
+
+To see the SQL statements, run with DEBUG:
+
+    DEBUG=1 rake
+
+
+Notes
+-----
+
+The way that the recursive role lookup works, it can work to org trees of any depth.
+
+I used ActiveRecord and its relation methods, so it was easy to do. The tests are actually harder to understand. I should refactor them a bit.
