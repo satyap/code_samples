@@ -47,4 +47,4 @@ Notes
 
 The way that the recursive role lookup works, it can work to org trees of any depth.
 
-I used ActiveRecord and its relation methods, so it was easy to do. The tests are actually harder to understand. I should refactor them a bit.
+I used ActiveRecord and its relation methods, so it was easy to do.
