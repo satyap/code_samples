@@ -1,4 +1,4 @@
-
+#!/bin/bash
 # Shell script generates images suitable for use as a title clip in kdenlive
 
 function gen () {
