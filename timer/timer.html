@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Calendar Grid with Minute Boxes and Time Info</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+    }
+    .info {
+      margin-bottom: 20px;
+      font-size: 1.1em;
+      font-weight: bold;
+    }
+    .calendar {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .row {
+      display: flex;
+      gap: 5px;
+    }
+    .day {
+      flex: 1;
+      border: 1px solid #ccc;
+      position: relative;
+      min-height: 96px;
+      display: flex;
+      flex-wrap: wrap;
+      align-content: flex-start;
+    }
+    .sub-minute {
+      width: calc(100% / 60);
+      height: calc(100% / 24);
+      box-sizing: border-box;
+      background-color: white;
+    }
+    .sub-minute.filled {
+      background-color: green;
+      opacity: 0.6;
+    }
+    .fill {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background-color: green;
+      opacity: 0.6;
+      z-index: 0;
+    }
+    .day .label {
+      position: absolute;
+      bottom: 2px;
+      left: 2px;
+      font-size: 0.6em;
+      color: #333;
+      background: rgba(255,255,255,0.7);
+      padding: 1px 4px;
+      z-index: 10;
+    }
+    .day.today .label {
+      display: none;
+    }
+    .info {
+      margin-bottom: 20px;
+    }
+    .progress-bar {
+      position: relative;
+      height: 25px;
+      background-color: #eee;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      background-color: #4caf50;
+      height: 100%;
+      width: 0%;
+      transition: width 0.5s ease;
+    }
+    .progress-text {
+      position: absolute;
+      top: 0;
+      width: 100%;
+      text-align: center;
+      line-height: 25px;
+      font-weight: bold;
+      color: #333;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <h2>Calendar Grid</h2>
+  <label>Start Date/Time: <input type="datetime-local" id="start"></label>
+  <label>End Date/Time: <input type="datetime-local" id="end"></label>
+  <button onclick="render()">Render</button>
+
+  <div class="info" id="info">
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill"></div>
+      <div class="progress-text" id="progress-text"></div>
+    </div>
+  </div>
+  <div class="calendar" id="calendar"></div>
+
+  <script>
+    const UPDATE_INTERVAL_SECONDS = 45;
+
+    function formatDuration(seconds) {
+      const minutes = Math.floor(seconds / 60);
+      if (minutes < 60) return `${minutes} minute${minutes !== 1 ? 's' : ''}`;
+      const hours = Math.floor(minutes / 60);
+      if (hours < 24) return `${hours} hour${hours !== 1 ? 's' : ''}`;
+      const days = Math.floor(hours / 24);
+      if (days < 30) {
+        hrs = hours - days * 24
+        return `${days} day${days !== 1 ? 's' : ''} ${hrs} hrs`;
+    }
+      const weeks = Math.floor(days / 7);
+      return `${weeks} week${weeks !== 1 ? 's' : ''}`;
+    }
+
+    function updateInfo(start, end) {
+      const now = new Date();
+      const total = (end - start) / 1000;
+      const elapsed = (now - start) / 1000;
+      const remaining = (end - now) / 1000;
+
+      const percentElapsed = Math.max(0, Math.min(100, ((elapsed / total) * 100).toFixed(2)));
+
+      const fill = document.getElementById('progress-fill');
+      const text = document.getElementById('progress-text');
+
+      fill.style.width = `${percentElapsed}%`;
+      text.textContent = `Progress: ${percentElapsed}% | Elapsed: ${formatDuration(Math.max(0, elapsed))} | Remaining: ${formatDuration(Math.max(0, remaining))}`;
+    }
+
+    function updateURL(startInput, endInput) {
+      // Update URL query parameters
+      const params = new URLSearchParams(window.location.search);
+      params.set('start', startInput);
+      params.set('end', endInput);
+      const newUrl = `${window.location.pathname}?${params.toString()}`;
+      history.replaceState(null, '', newUrl);
+    }
+
+    function render() {
+      const startInput = document.getElementById('start').value;
+      const endInput = document.getElementById('end').value;
+      if (!startInput || !endInput) return;
+
+      updateURL(startInput, endInput)
+
+      const start = new Date(startInput);
+      const end = new Date(endInput);
+      updateInfo(start, end);
+      drawCalendar(start, end);
+    }
+
+    function drawCalendar(start, end) {
+      const calendar = document.getElementById('calendar');
+      calendar.innerHTML = '';
+
+      const days = [];
+      const now = new Date();
+
+      let current = new Date(start);
+      current.setHours(0, 0, 0, 0);
+
+      const endDate = new Date(end);
+      endDate.setHours(0, 0, 0, 0);
+
+      while (current <= endDate) {
+        days.push(new Date(current));
+        current.setDate(current.getDate() + 1);
+      }
+
+      for (let i = 0; i < days.length; i += 7) {
+        const row = document.createElement('div');
+        row.className = 'row';
+
+        for (let j = 0; j < 7; j++) {
+          const dayIndex = i + j;
+          const dayDiv = document.createElement('div');
+          dayDiv.className = 'day';
+
+          if (dayIndex < days.length) {
+            const dayDate = days[dayIndex];
+            const label = document.createElement('div');
+            label.className = 'label';
+            label.textContent = dayDate.toDateString();
+            dayDiv.appendChild(label);
+
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            if (dayDate < today) {
+              const fill = document.createElement('div');
+              fill.className = 'fill';
+              dayDiv.appendChild(fill);
+            } else if (dayDate.toDateString() === today.toDateString()) {
+              const now = new Date();
+              const minutesPassed = now.getHours() * 60 + now.getMinutes();
+              for (let m = 0; m < 1440; m++) {
+                const minuteDiv = document.createElement('div');
+                minuteDiv.className = 'sub-minute';
+                if (m < minutesPassed) {
+                  minuteDiv.classList.add('filled');
+                }
+                dayDiv.appendChild(minuteDiv);
+                dayDiv.classList.add('today');
+              }
+            }
+          } else {
+            dayDiv.style.backgroundColor = '#f7f7f7';
+          }
+
+          row.appendChild(dayDiv);
+        }
+
+        calendar.appendChild(row);
+      }
+    }
+
+    setInterval(() => {
+      const startInput = document.getElementById('start').value;
+      const endInput = document.getElementById('end').value;
+      if (startInput && endInput) {
+        render();
+      }
+    }, UPDATE_INTERVAL_SECONDS * 1000);
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      const start = params.get('start');
+      const end = params.get('end');
+
+      if (start && end) {
+        document.getElementById('start').value = start;
+        document.getElementById('end').value = end;
+        render();
+      }
+    });
+
+  </script>
+</body>
+</html>
